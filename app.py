@@ -1,9 +1,13 @@
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="UNG-ORION", version="1.0.0")
+STATIC = Path(__file__).resolve().parent / "static"
+app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
 DEPENDENCIES = {
@@ -19,6 +23,7 @@ def root():
         "status": "online",
         "role": "National Operations Command",
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "operations_ui": "/operations",
     }
 
 @app.get("/health")
@@ -46,3 +51,15 @@ def system_info():
         "role": "National Operations Command",
         "dependencies": {k: bool(v) for k, v in DEPENDENCIES.items()},
     }
+
+@app.get("/operations", include_in_schema=False)
+def operations():
+    return FileResponse(STATIC / "operations.html", media_type="text/html", headers={"Cache-Control": "no-store"})
+
+@app.get("/v1/operations/tracks")
+def operations_tracks():
+    # No operational feed is attached. Never represent scenario data as live telemetry.
+    return JSONResponse(
+        {"mode": "live", "tracks": [], "connected_sources": [], "last_updated": None},
+        headers={"Cache-Control": "no-store"},
+    )
