@@ -56,9 +56,9 @@
       }
       const [x,y]=project([t.point[1],t.point[0]]);
       const marker=node('g',{class:`svg-marker ${t.category}${state.selected===t.id?' active':''}`,transform:`translate(${x} ${y})`,tabindex:0,role:'button','aria-label':`Select simulated ${t.name}`},layer);
-      node('circle',{cx:0,cy:0,r:21,class:'marker-halo'},marker);
-      node('circle',{cx:0,cy:0,r:13,class:'marker-core'},marker);
-      const symbol=node('text',{x:0,y:5,'text-anchor':'middle'},marker);symbol.textContent=style.symbol;
+      node('circle',{cx:0,cy:0,r:17,class:'marker-halo'},marker);
+      node('circle',{cx:0,cy:0,r:11,class:'marker-core'},marker);
+      const symbol=node('text',{x:0,y:4,'text-anchor':'middle'},marker);symbol.textContent=style.symbol;
       const title=node('title',{},marker);title.textContent=`Simulated ${t.name}`;
       marker.addEventListener('click',e=>{e.stopPropagation();select(t.id);});
       marker.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(t.id);}});
@@ -135,7 +135,7 @@
   $('zoom-in').addEventListener('click',()=>zoomBy(1.25));
   $('zoom-out').addEventListener('click',()=>zoomBy(1/1.25));
   $('recenter').addEventListener('click',()=>{state.scale=1;setZoom();});
-  $('toggle-sidebar').addEventListener('click',()=>{$('sidebar').classList.toggle('open');$('toggle-sidebar').setAttribute('aria-expanded',String($('sidebar').classList.contains('open')));});
+  $('toggle-sidebar').addEventListener('click',()=>{if(matchMedia('(max-width:760px)').matches){$('sidebar').scrollIntoView({behavior:'smooth'});return;}$('sidebar').classList.toggle('open');$('toggle-sidebar').setAttribute('aria-expanded',String($('sidebar').classList.contains('open')));});
   $('close-sidebar').addEventListener('click',()=>{$('sidebar').classList.remove('open');$('toggle-sidebar').setAttribute('aria-expanded','false');});
   mode('live');
   fetch('/v1/operations/tracks',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('unavailable');return r.json();}).then(data=>{
