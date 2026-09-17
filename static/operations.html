@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1017">
+  <title>ORION · Operations Map</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/assets/operations.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script defer src="/assets/operations.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>UNG <em>ORION</em></strong><small>OPERATIONS COMMAND</small></div></div>
+      <span class="top-divider"></span>
+      <div class="workspace-label"><span class="tiny-square"></span> NATIONAL VIEW <span class="workspace-chevron">⌄</span></div>
+      <div class="top-spacer"></div>
+      <div class="top-time"><span class="clock-dot"></span><span id="utc-clock">--:--:-- UTC</span></div>
+      <div class="top-divider"></div>
+      <div class="operator"><span class="operator-avatar">O</span><span>OPERATIONS</span></div>
+    </header>
+
+    <main class="main-layout">
+      <aside class="sidebar" id="sidebar" aria-label="Track explorer">
+        <div class="sidebar-heading"><div><div class="eyebrow">SITUATIONAL AWARENESS</div><h1>Operations map</h1></div><button class="mobile-close" id="close-sidebar" aria-label="Close track panel">×</button></div>
+        <div class="mode-box"><span class="mode-label">DATA MODE</span><div class="mode-control" role="group" aria-label="Data mode"><button id="live-mode" class="mode-button active" aria-pressed="true">Live</button><button id="demo-mode" class="mode-button" aria-pressed="false">Simulated</button></div></div>
+        <div class="sidebar-intro"><span class="status-ring"></span><span id="feed-status">Checking live feeds…</span></div>
+        <div class="search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="track-search" type="search" placeholder="Search tracks or locations" aria-label="Search tracks or locations"></div>
+        <div class="filter-bar" role="group" aria-label="Track category"><button class="filter active" data-filter="all" aria-pressed="true">All <span id="count-all">0</span></button><button class="filter" data-filter="air" aria-pressed="false">Air</button><button class="filter" data-filter="maritime" aria-pressed="false">Water</button><button class="filter" data-filter="ground" aria-pressed="false">Ground</button></div>
+        <div class="list-head"><span>TRACKS <span id="visible-count">0</span></span><span class="list-sort">CATEGORY · NAME</span></div>
+        <div id="track-list" class="track-list" aria-live="polite"></div>
+        <div class="sidebar-footer"><span class="shield-icon">◇</span><div><strong>Source integrity</strong><span id="integrity-status">No sources connected</span></div></div>
+      </aside>
+
+      <section class="map-panel" aria-label="Operations map">
+        <div id="map" class="map-canvas" role="application" aria-label="Interactive map of Uganda and Lake Victoria"></div>
+        <div class="map-topline"><div class="breadcrumb"><span>COMMAND / ORION</span><span class="slash">/</span><strong>NATIONAL VIEW</strong></div><button id="toggle-sidebar" class="panel-toggle" aria-label="Toggle track panel" aria-expanded="false">☰ <span>Tracks</span></button></div>
+        <div class="map-status"><span class="status-indicator" id="map-status-indicator"></span><span id="map-status-text">LIVE · NO CONNECTED SOURCES</span></div>
+        <div class="demo-banner hidden" id="demo-banner"><strong>SIMULATED SCENARIO</strong><span>Training display · positions and trails are fictional</span></div>
+        <div class="map-actions"><button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button><span></span><button id="recenter" aria-label="Reset map view" title="Reset view">⌖</button></div>
+        <div class="map-bottom"><div class="map-coordinates" id="map-coordinates">0.3476° N · 32.5825° E</div><div class="map-legend"><span><i class="legend-dot air"></i> AIR</span><span><i class="legend-dot maritime"></i> WATER</span><span><i class="legend-dot ground"></i> GROUND</span><span><i class="legend-line"></i> TRAIL</span></div></div>
+        <div class="map-empty" id="map-empty"><div class="empty-graphic" aria-hidden="true"><span></span><span></span><span></span><i>⌖</i></div><div class="eyebrow">AWAITING TELEMETRY</div><h2>No live tracks available</h2><p>No operational sources are connected to this view. Explore a clearly marked sample scenario to see how tracks, trails, and zones appear.</p><button id="open-demo" class="primary-button">View simulated scenario <span>↗</span></button></div>
+        <section id="detail-card" class="detail-card hidden" aria-label="Selected track details"><div class="detail-head"><span class="detail-overline">TRACK DETAILS</span><button id="close-detail" aria-label="Close track details">×</button></div><div class="detail-title"><span id="detail-symbol" class="detail-symbol"></span><div><h2 id="detail-name"></h2><span id="detail-type"></span></div></div><div class="detail-divider"></div><div class="detail-grid"><div><span>IDENTIFIER</span><strong id="detail-id"></strong></div><div><span>LOCATION</span><strong id="detail-location"></strong></div><div><span>STATUS</span><strong id="detail-status"></strong></div><div><span>DATA SOURCE</span><strong>Scenario sample</strong></div></div><div class="detail-note">SIMULATED · No real asset or live telemetry</div></section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
