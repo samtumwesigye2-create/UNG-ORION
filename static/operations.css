@@ -5,3 +5,15 @@
 .map-backdrop,.map-svg{position:absolute;inset:0;width:100%;height:100%}.map-backdrop{object-fit:cover}.map-svg{z-index:1}@media(max-width:760px){.map-empty{top:auto;bottom:85px;transform:translateX(-50%);padding:18px 18px 20px;width:calc(100% - 30px)}.map-empty h2{font-size:17px}.map-empty p{font-size:11px;line-height:1.4;margin-bottom:13px}.map-empty .eyebrow{font-size:9px}.empty-graphic{display:none}.primary-button{padding:9px 12px}.map-bottom{bottom:25px}}
 /* Richer map palette and operational symbology. */
 .map-svg{background:transparent!important}.filter-bar{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3a5a61 transparent}.filter{flex:none}.track-icon.rescue,.detail-symbol.rescue{background:#294431;color:#b1eb87}.track-icon.signal,.detail-symbol.signal{background:#493045;color:#f5a0dc}.legend-dot.rescue{background:#a4e874}.legend-dot.signal{background:#ea73cf}.svg-marker.rescue .marker-halo{fill:#a4e874}.svg-marker.rescue .marker-core{fill:#2a4930;stroke:#a4e874}.svg-marker.rescue text{fill:#c1f49a}.svg-marker.signal .marker-halo{fill:#ea73cf}.svg-marker.signal .marker-core{fill:#4c2747;stroke:#ea73cf}.svg-marker.signal text{fill:#ffb8ea}.map-legend{gap:10px}.map-legend span{white-space:nowrap}.map-canvas{background:#142630}@media(max-width:760px){.demo-banner{display:none!important}.map-status.simulated{background:#322a23ed;border-color:#a27a45;color:#ffe1a5}.map-topline{top:15px}.map-legend{display:none}}
+/* Compact command display with the track roster visible below the mobile map. */
+.svg-marker text{font-size:12px}.svg-marker .marker-halo{fill-opacity:.08}.svg-marker.active .marker-halo{fill-opacity:.24}
+@media(max-width:760px){
+  .app-shell{height:auto;min-height:100dvh}.main-layout{display:flex;flex-direction:column;min-height:0;overflow:visible}
+  .map-panel{order:1;flex:none;height:min(56dvh,510px);min-height:390px}
+  .sidebar{order:2;position:relative;top:auto;bottom:auto;left:auto;transform:none;width:100%;height:470px;box-shadow:none;border-right:0;border-top:1px solid #34414b}
+  .mobile-close{display:none}.sidebar-heading{padding:17px 19px 12px}.sidebar-heading h1{font-size:18px}.mode-box{padding:10px 12px}.sidebar-intro{min-height:36px}
+  .map-topline{top:11px}.map-status{top:61px;font-size:9px}.map-actions{top:61px}.map-bottom{bottom:19px}.map-attribution{font-size:7px}
+  .map-empty{position:absolute;top:auto;bottom:54px;left:15px;transform:none;width:calc(100% - 30px);padding:11px 13px 13px;text-align:left}
+  .map-empty .eyebrow{font-size:8px}.map-empty h2{font-size:15px;margin:4px 0 8px}.map-empty p{display:none}.map-empty .primary-button{font-size:11px;padding:8px 10px}
+  .detail-card{right:15px;bottom:54px}
+}
