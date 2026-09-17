@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1017">
   <title>ORION · Operations Map</title>
-  <link rel="stylesheet" href="/assets/operations.css?v=6">
-  <script defer src="/assets/operations.js?v=6"></script>
+  <link rel="stylesheet" href="/assets/operations.css?v=7">
+  <script defer src="/assets/operations.js?v=7"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -25,6 +25,7 @@
         <div class="sidebar-heading"><div><div class="eyebrow">SITUATIONAL AWARENESS</div><h1>Operations map</h1></div><button class="mobile-close" id="close-sidebar" aria-label="Close track panel">×</button></div>
         <div class="mode-box"><span class="mode-label">DATA MODE</span><div class="mode-control" role="group" aria-label="Data mode"><button id="live-mode" class="mode-button active" aria-pressed="true">Live</button><button id="demo-mode" class="mode-button" aria-pressed="false">Simulated</button></div></div>
         <div class="sidebar-intro"><span class="status-ring"></span><span id="feed-status">Checking live feeds…</span></div>
+        <section class="space-feed" aria-label="CONSTELLATION space feed"><div class="space-head"><span>SPACE / CONSTELLATION</span><span id="space-link">CHECKING</span></div><strong id="space-receiver">Checking receiver…</strong><span id="space-detail">Checking satellite receiver telemetry.</span><span id="space-archive">Reception archive: checking</span><a href="https://ung-constellation-production.up.railway.app/mission-control" target="_blank" rel="noopener noreferrer">Open CONSTELLATION ↗</a></section>
         <div class="search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="track-search" type="search" placeholder="Search tracks or locations" aria-label="Search tracks or locations"></div>
         <div class="filter-bar" role="group" aria-label="Track category"><button class="filter active" data-filter="all" aria-pressed="true">All <span id="count-all">0</span></button><button class="filter" data-filter="air" aria-pressed="false">Air</button><button class="filter" data-filter="maritime" aria-pressed="false">Water</button><button class="filter" data-filter="ground" aria-pressed="false">Ground</button><button class="filter" data-filter="rescue" aria-pressed="false">Rescue</button><button class="filter" data-filter="signal" aria-pressed="false">Signals</button></div>
         <div class="list-head"><span>TRACKS <span id="visible-count">0</span></span><span class="list-sort">CATEGORY · NAME</span></div>
