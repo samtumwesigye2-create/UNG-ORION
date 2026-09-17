@@ -1,3 +1,5 @@
+import re
+
 from fastapi.testclient import TestClient
 from app import app
 
@@ -13,6 +15,11 @@ def test_operations_page_and_assets():
     assert client.get('/assets/operations.js').status_code == 200
     assert 'unpkg.com' not in page.text
     assert 'uganda-basemap.svg' in page.text
+    assert 'id="map-status"' in page.text
+    script = client.get('/assets/operations.js').text
+    referenced_ids = set(re.findall(r"\$\('([^']+)'\)", script))
+    rendered_ids = set(re.findall(r'id="([^"]+)"', page.text))
+    assert referenced_ids <= rendered_ids
     basemap = client.get('/assets/uganda-basemap.svg')
     assert basemap.status_code == 200
     assert b'LAKE VICTORIA' in basemap.content
