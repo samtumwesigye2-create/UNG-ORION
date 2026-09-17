@@ -20,9 +20,14 @@ def test_operations_page_and_assets():
     referenced_ids = set(re.findall(r"\$\('([^']+)'\)", script))
     rendered_ids = set(re.findall(r'id="([^"]+)"', page.text))
     assert referenced_ids <= rendered_ids
+    assert len(re.findall(r"id:'SIM-[A-Z][0-9]+',name:", script)) == 16
     basemap = client.get('/assets/uganda-basemap.svg')
     assert basemap.status_code == 200
     assert b'LAKE VICTORIA' in basemap.content
+    assert b'LAKE ALBERT' in basemap.content
+    hydro = client.get('/assets/uganda-hydro.json')
+    assert hydro.status_code == 200
+    assert any(item['name'] == 'Lake Kyoga' for item in hydro.json()['lakes'])
     geometry = client.get('/assets/uganda-map.json')
     assert geometry.status_code == 200
     assert any(item['name'] == 'Uganda' for item in geometry.json()['countries'])
