@@ -143,5 +143,21 @@
     // The current UI has no trusted operational ingestion contract. Do not display unvalidated feeds.
     setText('feed-status','Live feed integration pending');
   }).catch(()=>setText('feed-status','Live feed unavailable'));
+  async function refreshSpace(){
+    try{
+      const response=await fetch('/v1/operations/space',{cache:'no-store'});
+      if(!response.ok)throw new Error('space feed unavailable');
+      const data=await response.json();
+      setText('space-link',data.connected?'CONNECTED':'UNAVAILABLE');
+      const labels={active:'Receiver heartbeat recent',stale:'Receiver heartbeat stale','no heartbeat':'No receiver heartbeat',unknown:'Receiver state unavailable'};
+      setText('space-receiver',data.connected?(labels[data.receiver]||labels.unknown):'CONSTELLATION unavailable');
+      setText('space-detail',data.last_seen?'Last receiver heartbeat: '+new Date(data.last_seen).toLocaleString():'No current receiver measurements verified');
+      setText('space-archive',data.connected?`Archived receptions (latest 10): ${data.recent_receptions}`:'Reception archive unavailable');
+    }catch(_){
+      setText('space-link','UNAVAILABLE');setText('space-receiver','CONSTELLATION unavailable');
+      setText('space-detail','No current receiver measurements verified');setText('space-archive','Reception archive unavailable');
+    }
+  }
+  refreshSpace();setInterval(refreshSpace,30000);
   initMap();
 })();
