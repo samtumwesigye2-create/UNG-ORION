@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1017">
   <title>ORION · Operations Map</title>
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="/assets/operations.css">
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script defer src="/assets/operations.js"></script>
 </head>
 <body>
@@ -36,12 +33,13 @@
       </aside>
 
       <section class="map-panel" aria-label="Operations map">
-        <div id="map" class="map-canvas" role="application" aria-label="Interactive map of Uganda and Lake Victoria"></div>
+        <div id="map" class="map-canvas" role="application" aria-label="Schematic operations map of Uganda and Lake Victoria"></div>
         <div class="map-topline"><div class="breadcrumb"><span>COMMAND / ORION</span><span class="slash">/</span><strong>NATIONAL VIEW</strong></div><button id="toggle-sidebar" class="panel-toggle" aria-label="Toggle track panel" aria-expanded="false">☰ <span>Tracks</span></button></div>
         <div class="map-status"><span class="status-indicator" id="map-status-indicator"></span><span id="map-status-text">LIVE · NO CONNECTED SOURCES</span></div>
         <div class="demo-banner hidden" id="demo-banner"><strong>SIMULATED SCENARIO</strong><span>Training display · positions and trails are fictional</span></div>
         <div class="map-actions"><button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button><span></span><button id="recenter" aria-label="Reset map view" title="Reset view">⌖</button></div>
         <div class="map-bottom"><div class="map-coordinates" id="map-coordinates">0.3476° N · 32.5825° E</div><div class="map-legend"><span><i class="legend-dot air"></i> AIR</span><span><i class="legend-dot maritime"></i> WATER</span><span><i class="legend-dot ground"></i> GROUND</span><span><i class="legend-line"></i> TRAIL</span></div></div>
+        <div class="map-attribution">Map geometry © <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a> · schematic view</div>
         <div class="map-empty" id="map-empty"><div class="empty-graphic" aria-hidden="true"><span></span><span></span><span></span><i>⌖</i></div><div class="eyebrow">AWAITING TELEMETRY</div><h2>No live tracks available</h2><p>No operational sources are connected to this view. Explore a clearly marked sample scenario to see how tracks, trails, and zones appear.</p><button id="open-demo" class="primary-button">View simulated scenario <span>↗</span></button></div>
         <section id="detail-card" class="detail-card hidden" aria-label="Selected track details"><div class="detail-head"><span class="detail-overline">TRACK DETAILS</span><button id="close-detail" aria-label="Close track details">×</button></div><div class="detail-title"><span id="detail-symbol" class="detail-symbol"></span><div><h2 id="detail-name"></h2><span id="detail-type"></span></div></div><div class="detail-divider"></div><div class="detail-grid"><div><span>IDENTIFIER</span><strong id="detail-id"></strong></div><div><span>LOCATION</span><strong id="detail-location"></strong></div><div><span>STATUS</span><strong id="detail-status"></strong></div><div><span>DATA SOURCE</span><strong>Scenario sample</strong></div></div><div class="detail-note">SIMULATED · No real asset or live telemetry</div></section>
       </section>
