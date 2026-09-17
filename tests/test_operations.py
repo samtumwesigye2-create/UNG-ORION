@@ -12,6 +12,10 @@ def test_operations_page_and_assets():
     assert client.get('/assets/operations.css').status_code == 200
     assert client.get('/assets/operations.js').status_code == 200
     assert 'unpkg.com' not in page.text
+    assert 'uganda-basemap.svg' in page.text
+    basemap = client.get('/assets/uganda-basemap.svg')
+    assert basemap.status_code == 200
+    assert b'LAKE VICTORIA' in basemap.content
     geometry = client.get('/assets/uganda-map.json')
     assert geometry.status_code == 200
     assert any(item['name'] == 'Uganda' for item in geometry.json()['countries'])
