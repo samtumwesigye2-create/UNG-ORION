@@ -11,6 +11,10 @@ def test_operations_page_and_assets():
     assert 'Simulated' in page.text
     assert client.get('/assets/operations.css').status_code == 200
     assert client.get('/assets/operations.js').status_code == 200
+    assert 'unpkg.com' not in page.text
+    geometry = client.get('/assets/uganda-map.json')
+    assert geometry.status_code == 200
+    assert any(item['name'] == 'Uganda' for item in geometry.json()['countries'])
 
 
 def test_live_tracks_are_empty_without_a_connected_source():
