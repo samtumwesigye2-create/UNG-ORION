@@ -1,6 +1,8 @@
 import os
+import json
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.request import urlopen
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +12,7 @@ STATIC = Path(__file__).resolve().parent / "static"
 app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
+CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")
 DEPENDENCIES = {
     "iam": os.getenv("IAM_BASE_URL"),
     "atlas": os.getenv("ATLAS_BASE_URL"),
@@ -63,3 +66,52 @@ def operations_tracks():
         {"mode": "live", "tracks": [], "connected_sources": [], "last_updated": None},
         headers={"Cache-Control": "no-store"},
     )
+
+def _constellation_get(path):
+    # Fixed upstream paths only; never proxy a client-supplied URL or return raw edge metadata.
+    with urlopen(CONSTELLATION_BASE_URL + path, timeout=3) as response:
+        return json.load(response)
+
+
+@app.get("/v1/operations/space")
+def operations_space():
+    result = {"source": "UNG-CONSTELLATION", "connected": False,
+              "receiver": "unknown", "last_seen": None, "recent_receptions": 0,
+              "last_reception": None, "checked_at": datetime.now(timezone.utc).isoformat()}
+    try:
+        health = _constellation_get("/health")
+        if health.get("status") != "ok" or health.get("service") != "UNG-CONSTELLATION":
+            raise ValueError("Unexpected upstream service")
+        result["connected"] = True
+    except (OSError, ValueError, TypeError, KeyError):
+        return JSONResponse(result, headers={"Cache-Control": "no-store"})
+    try:
+        nodes = _constellation_get("/v1/edge/nodes").get("nodes", [])
+        now = datetime.now(timezone.utc)
+        seen = []
+        for node in nodes if isinstance(nodes, list) else []:
+            if not isinstance(node, dict) or not node.get("enabled") or not node.get("receive_only"):
+                continue
+            try:
+                stamp = datetime.fromisoformat(node["last_seen"].replace("Z", "+00:00"))
+                if stamp.tzinfo and stamp <= now:
+                    seen.append(stamp)
+            except (KeyError, TypeError, ValueError, AttributeError):
+                continue
+        if seen:
+            latest = max(seen)
+            result["last_seen"] = latest.isoformat()
+            result["receiver"] = "active" if (now - latest).total_seconds() <= 300 else "stale"
+        else:
+            result["receiver"] = "no heartbeat"
+    except (OSError, ValueError, TypeError, KeyError):
+        pass
+    try:
+        archives = _constellation_get("/v1/receptions?limit=10").get("receptions", [])
+        if isinstance(archives, list):
+            result["recent_receptions"] = len(archives)
+            if archives and isinstance(archives[0], dict):
+                result["last_reception"] = archives[0].get("end_time")
+    except (OSError, ValueError, TypeError, KeyError):
+        pass
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})

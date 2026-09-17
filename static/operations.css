@@ -7,6 +7,10 @@
 .map-svg{background:transparent!important}.filter-bar{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#3a5a61 transparent}.filter{flex:none}.track-icon.rescue,.detail-symbol.rescue{background:#294431;color:#b1eb87}.track-icon.signal,.detail-symbol.signal{background:#493045;color:#f5a0dc}.legend-dot.rescue{background:#a4e874}.legend-dot.signal{background:#ea73cf}.svg-marker.rescue .marker-halo{fill:#a4e874}.svg-marker.rescue .marker-core{fill:#2a4930;stroke:#a4e874}.svg-marker.rescue text{fill:#c1f49a}.svg-marker.signal .marker-halo{fill:#ea73cf}.svg-marker.signal .marker-core{fill:#4c2747;stroke:#ea73cf}.svg-marker.signal text{fill:#ffb8ea}.map-legend{gap:10px}.map-legend span{white-space:nowrap}.map-canvas{background:#142630}@media(max-width:760px){.demo-banner{display:none!important}.map-status.simulated{background:#322a23ed;border-color:#a27a45;color:#ffe1a5}.map-topline{top:15px}.map-legend{display:none}}
 /* Compact command display with the track roster visible below the mobile map. */
 .svg-marker text{font-size:12px}.svg-marker .marker-halo{fill-opacity:.08}.svg-marker.active .marker-halo{fill-opacity:.24}
+.space-feed{margin:0 18px 16px;padding:13px 14px;background:#14252b;border:1px solid #32656a;border-radius:7px;display:grid;gap:7px;color:#a4b9c0;font-size:11px;line-height:1.35}
+.space-head{display:flex;justify-content:space-between;gap:7px;font-size:9px;font-weight:800;letter-spacing:.11em;color:#77cfc9}
+.space-head span:last-child{color:#d9ba7a;text-align:right}
+.space-feed strong{font-size:13px;color:#e1eeed}.space-feed a{color:#7cddd2;text-decoration:none;font-weight:700}.space-feed a:hover{text-decoration:underline}
 @media(max-width:760px){
   .app-shell{height:auto;min-height:100dvh}.main-layout{display:flex;flex-direction:column;min-height:0;overflow:visible}
   .map-panel{order:1;flex:none;height:min(56dvh,510px);min-height:390px}
