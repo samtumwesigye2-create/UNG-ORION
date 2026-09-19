@@ -12,7 +12,7 @@ STATIC = Path(__file__).resolve().parent / "static"
 app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
-CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")
+CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")\nNEMESIS_BASE_URL = os.getenv("NEMESIS_BASE_URL", "https://ung-nemsis-production.up.railway.app").rstrip("/")
 DEPENDENCIES = {
     "iam": os.getenv("IAM_BASE_URL"),
     "atlas": os.getenv("ATLAS_BASE_URL"),
@@ -58,6 +58,18 @@ def system_info():
 @app.get("/operations", include_in_schema=False)
 def operations():
     return FileResponse(STATIC / "operations.html", media_type="text/html", headers={"Cache-Control": "no-store"})
+
+@app.get("/v1/operations/nemesis")
+def operations_nemesis():
+    result={"source":"UNG-NEMESIS","connected":False,"summary":None,"checked_at":datetime.now(timezone.utc).isoformat()}
+    try:
+        with urlopen(NEMESIS_BASE_URL+"/api",timeout=3) as response:
+            meta=json.load(response)
+        if meta.get("system")=="UNG-NEMESIS":
+            result["connected"]=True
+            result["summary"]={"status":meta.get("status"),"version":meta.get("version"),"executive_feed":NEMESIS_BASE_URL+"/v1/executive/summary"}
+    except (OSError,ValueError,TypeError,KeyError): pass
+    return JSONResponse(result,headers={"Cache-Control":"no-store"})
 
 @app.get("/v1/operations/tracks")
 def operations_tracks():
