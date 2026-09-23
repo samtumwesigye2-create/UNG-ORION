@@ -13,7 +13,8 @@ STATIC = Path(__file__).resolve().parent / "static"
 app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
-CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")\nNEMESIS_BASE_URL = os.getenv("NEMESIS_BASE_URL", "https://ung-nemsis-production.up.railway.app").rstrip("/")
+CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")
+NEMESIS_BASE_URL = os.getenv("NEMESIS_BASE_URL", "https://ung-nemsis-production.up.railway.app").rstrip("/")
 DEPENDENCIES = {
     "iam": os.getenv("IAM_BASE_URL"),
     "atlas": os.getenv("ATLAS_BASE_URL"),
