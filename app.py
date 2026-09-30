@@ -8,13 +8,15 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="UNG-ORION", version="1.0.0")\nimport janus_gate\njanus_gate.install(app, "UNG-ORION")
+app = FastAPI(title="UNG-ORION", version="1.0.0")
+import janus_gate
+janus_gate.install(app, "UNG-ORION")
 STATIC = Path(__file__).resolve().parent / "static"
 app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
 CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")
-NEMSIS_BASE_URL = os.getenv("NEMSIS_BASE_URL", os.getenv("NEMSIS_BASE_URL", "https://ung-nemsis-production.up.railway.app")).rstrip("/")
+NEMSIS_BASE_URL = os.getenv("NEMSIS_BASE_URL", os.getenv("NEMESIS_BASE_URL", "https://ung-nemsis-production.up.railway.app")).rstrip("/")
 DEPENDENCIES = {
     "iam": os.getenv("IAM_BASE_URL"),
     "atlas": os.getenv("ATLAS_BASE_URL"),
