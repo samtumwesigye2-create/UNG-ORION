@@ -8,13 +8,13 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="UNG-ORION", version="1.0.0")
+app = FastAPI(title="UNG-ORION", version="1.0.0")\nimport janus_gate\njanus_gate.install(app, "UNG-ORION")
 STATIC = Path(__file__).resolve().parent / "static"
 app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
 
 SERVICE = "UNG-ORION"
 CONSTELLATION_BASE_URL = os.getenv("CONSTELLATION_BASE_URL", "https://ung-constellation-production.up.railway.app").rstrip("/")
-NEMESIS_BASE_URL = os.getenv("NEMESIS_BASE_URL", "https://ung-nemsis-production.up.railway.app").rstrip("/")
+NEMSIS_BASE_URL = os.getenv("NEMSIS_BASE_URL", os.getenv("NEMSIS_BASE_URL", "https://ung-nemsis-production.up.railway.app")).rstrip("/")
 DEPENDENCIES = {
     "iam": os.getenv("IAM_BASE_URL"),
     "atlas": os.getenv("ATLAS_BASE_URL"),
@@ -63,13 +63,13 @@ def operations():
 
 @app.get("/v1/operations/nemesis")
 def operations_nemesis():
-    result={"source":"UNG-NEMESIS","connected":False,"summary":None,"checked_at":datetime.now(timezone.utc).isoformat()}
+    result={"source":"UNG-NEMSIS","connected":False,"summary":None,"checked_at":datetime.now(timezone.utc).isoformat()}
     try:
-        with urlopen(NEMESIS_BASE_URL+"/api",timeout=3) as response:
+        with urlopen(NEMSIS_BASE_URL+"/api",timeout=3) as response:
             meta=json.load(response)
-        if meta.get("system")=="UNG-NEMESIS":
+        if meta.get("system")=="UNG-NEMSIS":
             result["connected"]=True
-            result["summary"]={"status":meta.get("status"),"version":meta.get("version"),"executive_feed":NEMESIS_BASE_URL+"/v1/executive/summary"}
+            result["summary"]={"status":meta.get("status"),"version":meta.get("version"),"executive_feed":NEMSIS_BASE_URL+"/v1/executive/summary"}
     except (OSError,ValueError,TypeError,KeyError): pass
     return JSONResponse(result,headers={"Cache-Control":"no-store"})
 
