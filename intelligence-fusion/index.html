@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNG ORION | Intelligence Fusion Demo</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#e8eefb;background:#081222}
+*{box-sizing:border-box}body{margin:0}header{padding:20px;background:#111f36;border-bottom:1px solid #2b415d}h1{margin:0;font-size:1.4rem}small,.muted{color:#9cb2ce}
+main{max-width:1200px;margin:auto;padding:18px}nav{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+button{background:#203854;border:1px solid #547092;color:#fff;border-radius:8px;padding:10px 14px;cursor:pointer}
+button[aria-pressed=true]{background:#2465b5}section{background:#101f34;border:1px solid #31465e;border-radius:12px;padding:16px;margin:12px 0}
+svg{width:100%;height:auto;max-height:410px;background:#0b1729;border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{text-align:left;padding:9px;border-bottom:1px solid #304259}
+input{padding:11px;border-radius:8px;background:#0b1729;border:1px solid #49627d;color:white;width:100%}
+.dot{fill:#4d9cff;stroke:#b8d7ff;stroke-width:2}.link{stroke:#6d89ac;stroke-width:2}
+@media(min-width:850px){.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
+</style></head><body>
+<header><h1>UNG / ORION — Intelligence Fusion</h1><small>Offline demonstration · synthetic data only · no surveillance or live tracking</small></header>
+<main><nav><button id="graphBtn" aria-pressed="true">Relationships</button><button id="timelineBtn">Timeline</button><button id="mapBtn">Geospatial</button></nav>
+<section><label for="search">Filter entities and events</label><input id="search" placeholder="Search sample data"></section>
+<section id="view" aria-live="polite"></section>
+<section><h2>Source records</h2><div style="overflow:auto"><table><thead><tr><th>Time (UTC)</th><th>Type</th><th>Subject</th><th>Detail</th><th>Source</th></tr></thead><tbody id="records"></tbody></table></div></section>
+<section><h2>Analyst safeguards</h2><p class="muted">Visual associations are not proof of wrongdoing. Verify provenance and authorization before using real data. This demo does not authenticate users, store evidence, import sensitive records, or connect to production systems.</p></section></main>
+<script>
+"use strict";
+const entities=[{id:"p1",label:"Person A",kind:"person",x:120,y:95},{id:"p2",label:"Person B",kind:"person",x:390,y:95},{id:"d1",label:"Device 01",kind:"device",x:120,y:260},{id:"d2",label:"Device 02",kind:"device",x:390,y:260}];
+const events=[
+{id:"e1",ts:"2026-10-20T09:00:00Z",kind:"association",a:"p1",b:"d1",description:"Synthetic device association",source:"demo"},
+{id:"e2",ts:"2026-10-20T09:10:00Z",kind:"association",a:"p2",b:"d2",description:"Synthetic device association",source:"demo"},
+{id:"e3",ts:"2026-10-20T10:00:00Z",kind:"location",a:"d1",lat:33.850,lon:-84.010,description:"Synthetic location observation",source:"demo"},
+{id:"e4",ts:"2026-10-20T10:05:00Z",kind:"location",a:"d2",lat:33.851,lon:-84.011,description:"Synthetic location observation",source:"demo"},
+{id:"e5",ts:"2026-10-20T10:15:00Z",kind:"communication",a:"d1",b:"d2",description:"Synthetic call metadata",source:"demo"}];
+const el=id=>document.getElementById(id);let mode="graph";
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function render(){
+const q=el("search").value.toLowerCase(),filtered=events.filter(e=>JSON.stringify(e).toLowerCase().includes(q));let out="";
+if(mode==="graph"){
+const ids=new Set(filtered.flatMap(e=>[e.a,e.b].filter(Boolean)));const nodes=entities.filter(e=>ids.has(e.id)||e.label.toLowerCase().includes(q));
+out='<h2>Relationship graph</h2><svg viewBox="0 0 520 350" role="img" aria-label="Synthetic relationship graph">';
+for(const e of filtered){if(!e.b)continue;const a=entities.find(n=>n.id===e.a),b=entities.find(n=>n.id===e.b);if(a&&b)out+='<line class="link" x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"/>';}
+for(const n of nodes)out+='<circle class="dot" cx="'+n.x+'" cy="'+n.y+'" r="24"/><text fill="white" text-anchor="middle" x="'+n.x+'" y="'+(n.y+44)+'">'+escapeHtml(n.label)+'</text>';
+out+='</svg>';
+}else if(mode==="timeline"){
+out='<h2>Event timeline</h2>'+filtered.map(e=>'<p><strong>'+escapeHtml(e.ts)+'</strong> · '+escapeHtml(e.kind)+' · '+escapeHtml(e.description)+'</p>').join('');
+}else{
+const points=filtered.filter(e=>Number.isFinite(e.lat)&&Number.isFinite(e.lon));
+out='<h2>Geospatial observations (schematic, not a street map)</h2><svg viewBox="0 0 520 300" role="img" aria-label="Relative positions of synthetic location observations"><path d="M0 80 H520 M0 160 H520 M0 240 H520 M130 0 V300 M260 0 V300 M390 0 V300" stroke="#273c56"/>';
+for(const p of points){const x=260+(p.lon+84.0105)*120000,y=150-(p.lat-33.8505)*120000;out+='<circle cx="'+x+'" cy="'+y+'" r="9" fill="#ffb454"/><text x="'+(x+13)+'" y="'+(y-10)+'" fill="white">'+escapeHtml(p.a)+'</text>';}
+out+='</svg><p class="muted">Coordinates are fabricated. This schematic uses a local linear projection and is not suitable for navigation.</p>';
+}
+el("view").innerHTML=out;
+el("records").innerHTML=filtered.map(e=>'<tr><td>'+escapeHtml(e.ts)+'</td><td>'+escapeHtml(e.kind)+'</td><td>'+escapeHtml(e.a)+'</td><td>'+escapeHtml(e.description)+'</td><td>'+escapeHtml(e.source)+'</td></tr>').join('');
+for(const name of ["graph","timeline","map"])el(name+"Btn").setAttribute("aria-pressed",String(name===mode));
+}
+for(const name of ["graph","timeline","map"])el(name+"Btn").addEventListener("click",()=>{mode=name;render()});
+el("search").addEventListener("input",render);render();
+</script></body></html>
