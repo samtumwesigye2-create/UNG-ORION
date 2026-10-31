@@ -14,7 +14,7 @@ input{padding:11px;border-radius:8px;background:#0b1729;border:1px solid #49627d
 @media(min-width:850px){.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
 </style></head><body>
 <header><h1>UNG / ORION — Intelligence Fusion</h1><small>Offline demonstration · synthetic data only · no surveillance or live tracking</small></header>
-<main><nav><button id="graphBtn" aria-pressed="true">Relationships</button><button id="timelineBtn">Timeline</button><button id="mapBtn">Geospatial</button></nav>
+<main><p id="sourceStatus" class="muted">Embedded synthetic demonstration data</p><nav><button id="graphBtn" aria-pressed="true">Relationships</button><button id="timelineBtn">Timeline</button><button id="mapBtn">Geospatial</button></nav>
 <section><label for="search">Filter entities and events</label><input id="search" placeholder="Search sample data"></section>
 <section id="view" aria-live="polite"></section>
 <section><h2>Source records</h2><div style="overflow:auto"><table><thead><tr><th>Time (UTC)</th><th>Type</th><th>Subject</th><th>Detail</th><th>Source</th></tr></thead><tbody id="records"></tbody></table></div></section>
@@ -52,4 +52,27 @@ for(const name of ["graph","timeline","map"])el(name+"Btn").setAttribute("aria-p
 }
 for(const name of ["graph","timeline","map"])el(name+"Btn").addEventListener("click",()=>{mode=name;render()});
 el("search").addEventListener("input",render);render();
+// Refresh demonstration records from the local read-only API when available.
+// Static file previews continue to use the embedded synthetic records.
+async function refreshFromApi(){
+  if(location.protocol==="file:")return;
+  try{
+    const response=await fetch("./api/v1/fusion",{cache:"no-store"});
+    if(!response.ok)return;
+    const data=await response.json();
+    if(data.synthetic!==true||!Array.isArray(data.entities)||!Array.isArray(data.events))return;
+    const names=new Map(data.entities.map(x=>[x.id,x.label]));
+    const converted=data.events.map(e=>({
+      id:e.id,ts:e.timestamp,kind:e.type,a:e.subjects?.[0],b:e.subjects?.[1],
+      lat:e.lat,lon:e.lon,source:e.source,
+      description:e.type==="location"?"Synthetic location observation":
+        e.type==="communication"?"Synthetic call metadata":"Synthetic device association"
+    }));
+    if(converted.length){events.splice(0,events.length,...converted);render();}
+    const banner=document.getElementById("sourceStatus");
+    if(banner)banner.textContent="Connected to local synthetic demonstration API";
+  }catch(_error){/* Embedded demo remains usable without a server. */}
+}
+refreshFromApi();
+
 </script></body></html>
